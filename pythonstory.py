@@ -1,3 +1,15 @@
+import time
+
+start_time = time.time()
+
+playername = input("Player, what is your name?")
+playergender = input("Are you a boy or a girl?")
+
+if playergender == "boy":
+    playerpronoun = "he"
+else:
+    playerpronoun = "she"
+
 running = True
 scenario = 1
 inventory = []
@@ -32,6 +44,17 @@ while (running == True and health > 0):
                 print("You died. Nice going moron!")
     elif scenario == 2:
         print("You see a big monster in front of you. It wants to eat you.")
+        print("                \\||/")
+        print("                |  @___oo")
+        print("      \\/\\  /\\   / (__,,,,|")
+        print("     ) /^\\) ^\\/ _)")
+        print("     )   /^\\/   _)")
+        print("     )   _ /  / _)")
+        print(" /\\  )/\\/ ||  | )_)")
+        print("<  >      |(,,) )__)")
+        print(" ||      /    \\)___)")
+        print(" | \\____(      )___) )___")
+        print("  \\______(_______;;; __;;;")
         monsterresponse = input("Will you attack, run, or try to talk? ")
         if monsterresponse == "attack":
             scenario += 1
@@ -72,30 +95,45 @@ while (running == True and health > 0):
         putitemdown = input("Would you like to put the amulet down?")
         if putitemdown == "yes":
             inventory.remove("golden amulet")
-            print(inventory)
+            print(f"Your inventory currently contains {inventory}")
+        else:
+            print(f"Your inventory currently contains {inventory}")
         scenario += 1
     elif scenario == 4:
         print("                                  ")
-        print("You are presented with two doors. ")
-        print("The door on the left is large, wooden, and foreboding. ")
-        print("The door on the right is small and encircled with stone.")
+        print("You are presented with two doors:")
+        print("The door on the left is large, wooden, and foreboding. Bet there's a bat.")
+        print("The door on the right is small and encircled with stone. It whistles with opportunity.")
         door_choice = input("Which door do you choose? Right or left? ")
         print("                                                       ")
         if (door_choice == "left" and "golden amulet" in inventory):
-            print("You open the door and a great burst of flame hits you in the chest")
-            print("The amulet crumbles to rust, but you are unharmed!")
+            print("You hear a loud whoosh as a burst of flame slams into you!")
+            print("The amulet crumbles to dust, but you are unharmed!")
             break
         elif(door_choice == "left" and ("golden amulet" not in inventory) and health <= 2):
             print("You get schwacked by a huge gust of flame. Roasted bro! ")
             print("You died.")
             break
         else:
-            print("You enter the right room and you get hella skrilla")
+            print("You enter the right room and you get so much treasure you barf")
             break
     else:
         print("How did you get here?")
         break
 
+elapsed_time = time.time() - start_time
+playerfinalhealth = health
+if playerfinalhealth == 3:
+    playerfinalhealth = "excellent"
+elif playerfinalhealth == 2:
+    playerfinalhealth = "good"
+elif playerfinalhealth == 1:
+    playerfinalhealth = "poor"
+else:
+    playerfinalhealth = "fucked up"
 
-
+print(f"Here lies {playername}, buried with the {inventory} {playerpronoun} so cherished, last known to be in {playerfinalhealth} health, on a journey of {elapsed_time} seconds")
+## genie
+## add functions
+## add health bar
 
