@@ -304,6 +304,8 @@ while (running == True and health > 0):
     elif scenario == 5:
         print("You finally come upon the treasure. Boy, that wasn't very well guarded...")
         print("-------------------------------------------------------------------------")
+        print("Many years later, you die happily.")
+        print("-------------------------------------------------------------------------")
         break
     else:
         print("How did you get here?")
