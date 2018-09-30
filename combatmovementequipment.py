@@ -23,6 +23,7 @@ class Player:
                 monsters[self.location].health -= 1 + self.equipment.damage
             else:
                 print("You attack the monster for 1 damage")
+                monsters[self.location].health -= 1
 
     def equip(self):
         if len(self.inventory) > 0:
@@ -37,20 +38,22 @@ class Player:
             print("You don't have anything to equip")
     def forward(self):
         self.location += 1
-        print(rooms[self.location].description)
-        rooms[self.location].monster
         combat.combatflow(monsters[self.location])
 
     def back(self):
         if self.location != 0:
             self.location -= 1
-            print(rooms[self.location].description)
             combat.combatflow(monsters[self.location])
         else:
-            print("You can't go back!")
+            print("                    o------------------o")
+            print("                    |You can't go back!|")
+            print("                    o------------------o")
     def run(self):
+        if self.location != 0:
             print("You run away!")
             self.location -= 1
+        else:
+            print("You can't go back!")
     def talk(self):
             print("You have a great conversation")
     def set0(self):
@@ -79,9 +82,6 @@ class Room:
 
     def combatstart(self,monster):
         combat.combatflow(monster=monsters[player.location])
-    def roomaction(self):
-        if player.location == self.location:
-            print("what would you like to do?")
 
 class Combat:
     def __init__(self, monster):
@@ -89,41 +89,61 @@ class Combat:
         self.monster = monster
 
     def combatflow(self,monster):
-        print("Fight fight fight!")
-        print(f"You approach the {monster.name}. He looks {monster.adjective}")
-        while monster.health >= 0:
+        print("                                      ")
+        print(f"                     #----------------{(len(monster.name) - len(monster.adjective))*'-'}#")
+        print(f"                     | A {monster.name} appears!|")
+        print(f"                     | He looks {monster.adjective}. {(len(monster.name) - len(monster.adjective))*' '}|")
+        print(f"                     #----------------{(len(monster.name) - len(monster.adjective))*'-'}#")
+        print("                                      ")
+        while monsters[player.location].health > 0 and monsters[player.location].location == player.location:
             print("You have the following options")
-            print("------------------------------------------------------")
-            print("ATTACK")
-            print("TALK")
-            print("RUN")
-            print("------------------------------------------------------")
+            print("                           +--------+")
+            print("                           | ATTACK |")
+            print("                           |  TALK  |")
+            print("                           |  FLEE  |")
+            print("                           +--------+")
             playerinput = input("What will you do?")
             if playerinput == "attack":
                 player.attack()
             elif playerinput == "talk":
                 player.talk()
-            elif playerinput == "run":
+            elif playerinput == "flee":
                 player.run()
                 player.location -=1
-
+        if monsters[player.location].health <= 0:
             print("--------------------------------------")
             print("You win!")
             print("You get the following loot!")
             print("--------------------------------------")
-            if len(monster.inventory) == 0:
+            if len(monsters[player.location].inventory) == 0:
                 print("The monster didn't have anything")
             else:
-                player.inventory.append(monster.inventory)
-                print(f"You got {monster.inventory}")
+                player.inventory.append(monsters[player.location].inventory)
+                print(f"You got {monsters[player.location].inventory}")
             print("--------------------------------------")
-            if monster.gold >= 0:
-                player.gold = player.gold + monster.gold
-                print(f"You got {monster.gold} gold")
+            if monsters[player.location].gold >= 0:
+                player.gold = player.gold + monsters[player.location].gold
+                print(f"You got {monsters[player.location].gold} gold")
             else:
                 print("You didn't get any gold")
                 print("-------------------------------------")
-            break
+
+class Shopkeeper:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Initializing Classes
 player = Player()
@@ -149,24 +169,51 @@ rooms = [entrance, firstroom, secondroom]
 # Creating Combat
 combat = Combat(monster=monsters[player.location])
 
-print("TESTING ABILITIES")
-print("---------------------------------------------------")
-print("---------------------------------------------------")
-print("MOVING")
-print("---------------------------------------------------")
-print(f"You are currently in room {player.location}")
-player.forward()
-print(f"You are currently in room {player.location}")
-player.back()
-print(f"You are currently in room {player.location}")
-player.back()
-print("MOVING TEST COMPLETE")
-print("---------------------------------------------------")
-print("INVENTORY/ EQUIPMENT")
-print("---------------------------------------------------")
-print(f"You pick up a {longsword.name}")
-player.inventory.append(longsword)
-player.equip()
-print(f"You have {player.equipment.name} equipped")
-print("INVENTORY AND EQUIPMENT TEST COMPLETE")
-print("---------------------------------------------------")
+#print("TESTING ABILITIES")
+#print("---------------------------------------------------")
+#print("---------------------------------------------------")
+#print("MOVING")
+#print("---------------------------------------------------")
+#print(f"You are currently in room {player.location}")
+#player.forward()
+#print(f"You are currently in room {player.location}")
+#player.back()
+#print(f"You are currently in room {player.location}")
+#player.back()
+#print("MOVING TEST COMPLETE")
+#print("---------------------------------------------------")
+#print("INVENTORY/ EQUIPMENT")
+#print("---------------------------------------------------")
+#print(f"You pick up a {longsword.name}")
+#player.inventory.append(longsword)
+#player.equip()
+#print(f"You have {player.equipment.name} equipped")
+#print("INVENTORY AND EQUIPMENT TEST COMPLETE")
+#print("---------------------------------------------------")
+
+running = True
+
+while running == True:
+    print("                                             ")
+    print("                   *--------------------------*")
+    print("                   |What would you like to do?|")
+    print("                   |--------------------------|")
+    print("                   |forward ---- Move forward.|")
+    print("                   |back ---- Move backwards. |")
+    print('                   |look ---- Look around.    |')
+    print("                   *--------------------------*")
+    print("                                             ")
+    playerinput = input("What would you like to do? ")
+    if playerinput == "forward":
+        player.forward()
+    elif playerinput == "back":
+        player.back()
+    elif playerinput == "look":
+        print("                                   ")
+        print("-----------------------------------")
+        print(rooms[player.location].description)
+        print("-----------------------------------")
+        print("                                   ")
+    else:
+        print("Try another command")
+        print("-----------------------------------")
