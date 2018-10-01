@@ -15,7 +15,7 @@ class Player:
         self.inventory = []
         self.gold = 3
         self.location = 0
-        self.equipment = 0
+        self.equipment = None
 
     def equip(self):
         if len(self.inventory) > 0:
@@ -58,13 +58,16 @@ class Player:
         if len(player.inventory) == 0:
             print("|You have nothing in your inventory|")
         else:
-            print("             |  You have the following items: |")
+            print("             |  You have the following items:                          |")
             for item in self.inventory:
-                print(f"             |               {item.name}                          |")
+                print(f"             |               {item.name}                          {(10-len(item.name))* ' '}|")
     def check_stats(self):
-        print("                     *---------------------*")
-        print(f"                     |      Health: {player.health}      |")
-        print("                     *---------------------*")
+#        print("                        *---------------------*")
+        print(f"                        |      Name: {self.playername}          |")
+#        print(f"                        |      Health: {self.health}      |")
+#        print(f"                        |      Gold: {self.gold}          |")
+#        print(f"                        |    Equipped: {self.equipment}          |")
+#        print("                        *---------------------*")
 
 class Monster:
 
@@ -231,31 +234,32 @@ class Introduction:
         print("                     *--------------------------------*")
         print("                     |  Tell me your name, traveler.  |")
         print("                     *--------------------------------*")
-        self.playername = input()
+        self.playername = input("                                     ")
         print("                     *---------------------------------*")
         print(f"                     |  Are you a man or a woman, {self.playername}? {(2-(len(self.playername)))*' '}|")
         print("                     *---------------------------------*")
-        self.playergender = input()
+        self.playergender = input("                                     ")
         if self.playergender == "man":
             self.playerpronoun = "he"
         elif self.playergender == "woman":
             self.playerpronoun = "they"
         else:
             self.playerpronoun = "they"
-        print("                     *------------------------------------------*")
-        print(f"                     | Tell me {self.playername}, are a brave or cowardly {self.playergender}? {abs(6-(len(self.playergender)))*' '}|")
-        print("                     *------------------------------------------*")
-        self.playercourage =input()
+        print("                 *------------------------------------------*")
+        print(f"                 | Tell me {self.playername}, are a brave or cowardly {self.playergender}?{(3-(len(self.playergender)))*' '}|")
+        print("                 *------------------------------------------*")
+        self.playercourage =input("                                    ")
         if self.playercourage == "brave":
             self.playerhealth = 3
         elif self.playercourage == "cowardly":
             self.playerhealth = 5
         else:
             self.playerhealth = 7
-        print("*-------------------------------------------------------------*")
-        print("|                  Do you love or hate money?                 |")
-        print("*-------------------------------------------------------------*")
-        self.playerwealth = input()
+        print("                     *------------------------------*")
+        print("                     |  Do you love or hate money?  |")
+        print("                     *------------------------------*")
+
+        self.playerwealth = input("                                   ")
         if self.playerwealth == "hate":
             self.playermoney = 1
         elif self.playerwealth == "love":
@@ -283,11 +287,11 @@ evilthief = Monster("evil thief", "shadowy", 4,2,2,longsword)
 monsters = [goblin, skeleton, kobold, evilthief]
 
 # Creating Rooms
-entrance = Room(0, "You see the entrance to a massive cave", goblin,False)
-firstroom = Room(1, "You enter a room ensconced in stone", skeleton,False)
-secondroom = Room(2, "You enter a dark room. A single torch burns in the corner", kobold,False)
-thirdroom = Room(3, "You enter test room 1", evilthief,False)
-fourthroom = Room(4, "You enter test room 2", 0, True)
+entrance = Room(0, "You see the entrance to a massive cave.", goblin,False)
+firstroom = Room(1, "You enter a room ensconced in stone.", skeleton,False)
+secondroom = Room(2, "You enter a dark room. A single torch burns in the corner.", kobold,False)
+thirdroom = Room(3, "You enter test room 1.", evilthief,False)
+fourthroom = Room(4, "You enter test room 2.", 0, True)
 rooms = [entrance, firstroom, secondroom,thirdroom, fourthroom]
 
 # Creating Combat
@@ -301,28 +305,42 @@ player.inventory.append(longsword)
 player.inventory.append(longbow)
 
 while running == True:
-    print("                                             ")
-    print("                   *--------------------------*")
-    print("                   |What would you like to do?|")
-    print("                   |--------------------------|")
-    print("                   |forward ---- Move forward.|")
-    print("                   |back ---- Move backwards. |")
-    print('                   |look ---- Look around.    |')
-    print('                   |inv ---- Check inventory. |')
-    print('                   |equip ---- Equip weapon.  |')
-    print('                   |stats ---- Check stats.   |')
-    print("                   *--------------------------*")
-    print("                                             ")
-    playerinput = input()
+    firsttime = 0
+    if firsttime == 0:
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                 *--------------------------------------*")
+        print(f"                 |{rooms[player.location].description}|")
+        print("                 *--------------------------------------*")
+        firsttime += 1
+    print("                                                 ")
+    print("                       *--------------------------*")
+    print("                       |What would you like to do?|")
+    print("                       |--------------------------|")
+    print("                       |forward ---- Move forward.|")
+    print("                       |back ---- Move backwards. |")
+    print('                       |look ---- Look around.    |')
+    print('                       |inv ---- Check inventory. |')
+    print('                       |equip ---- Equip weapon.  |')
+    print('                       |stats ---- Check stats.   |')
+    print("                       *--------------------------*")
+    print("                                                 ")
+    playerinput = input("                                     ")
     if playerinput == "forward":
         player.forward()
     elif playerinput == "back":
         player.back()
     elif playerinput == "look":
         print("                                   ")
-        print("-----------------------------------")
-        print(rooms[player.location].description)
-        print("-----------------------------------")
+        print("                 *--------------------------------------*")
+        print(f"                 |{rooms[player.location].description}|")
+        print("                 *--------------------------------------*")
         print("                                   ")
     elif playerinput == "inv":
         print("                                   ")
@@ -332,9 +350,7 @@ while running == True:
         print("                                   ")
     elif playerinput == "equip":
         print("                                   ")
-        print("             #--------------------------------------------------#")
         player.equip()
-        print("             #--------------------------------------------------#")
         print("                                   ")
     elif playerinput == "stats":
         print("                                   ")
