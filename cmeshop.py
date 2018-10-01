@@ -7,7 +7,7 @@ class Equipment:
 
 class Player:
 
-    def __init__(self):
+    def __init__(self,health, playername, playergender, playerpronoun, playergold):
         self.health = 3
         self.playername = "None"
         self.playergender = "None"
@@ -17,18 +17,11 @@ class Player:
         self.location = 0
         self.equipment = 0
 
-    def attack(self):
-            if self.equipment != 0:
-                print(f"You attack the monster for {1+self.equipment.damage} damage")
-                monsters[self.location].health -= 1 + self.equipment.damage
-            else:
-                print("You attack the monster for 1 damage")
-                monsters[self.location].health -= 1
-
     def equip(self):
         if len(self.inventory) > 0:
-            print("Pick which of your weapons you'd like to equip")
-            print("----------------------------------------------")
+            print("*----------------------------------------------*")
+            print("|Pick which of your weapons you'd like to equip|")
+            print("*----------------------------------------------*")
             for x in range(len(self.inventory)):
                 print(f"{[x]} {player.inventory[x].name}")
             equipmentvalue = int(input("Which would you like to equip? "))
@@ -39,7 +32,7 @@ class Player:
     def forward(self):
         self.location += 1
         if rooms[self.location].monster in monsters:
-            combat.combatflow(monsters[self.location])
+            combat.combatflow(rooms[self.location].monster)
         elif rooms[self.location].shopkeeper == True:
             shopping.shopping()
 
@@ -68,6 +61,10 @@ class Player:
             print("             |  You have the following items: |")
             for item in self.inventory:
                 print(f"             |               {item.name}                          |")
+    def check_stats(self):
+        print("                     *---------------------*")
+        print(f"                     |      Health: {player.health}      |")
+        print("                     *---------------------*")
 
 class Monster:
 
@@ -98,35 +95,43 @@ class Room:
         if self.shopkeeper == True:
             shopping.shopping()
 
-
 class Combat:
     def __init__(self, monster):
         self.player_alive = True
         self.monster = monster
 
+    def attack(self):
+        if player.equipment != 0:
+            print(f"You attack the {self.monster} for {1+player.equipment.damage} damage!")
+            self.monster.health -= 1 + player.equipment.damage
+        else:
+            print("You attack the monster for 1 damage")
+            self.monster.health -= 1
+
     def combatflow(self,monster):
         print("                                      ")
-        print(f"                     #----------------{(len(monster.name) - len(monster.adjective))*'-'}#")
-        print(f"                     | A {monster.name} appears!|")
-        print(f"                     | He looks {monster.adjective}. {(len(monster.name) - len(monster.adjective))*' '}|")
-        print(f"                     #----------------{(len(monster.name) - len(monster.adjective))*'-'}#")
+        print(f"                     #----------------{(len(self.monster.name) - len(self.monster.adjective))*'-'}--#")
+        print(f"                     | A {self.monster.name} appears!|")
+        print(f"                     | He looks {self.monster.adjective}. {(len(self.monster.name) - len(self.monster.adjective))*' '}|")
+        print(f"                     #----------------{(len(self.monster.name) - len(self.monster.adjective))*'-'}--#")
         print("                                      ")
-        while monsters[player.location].health > 0 and monsters[player.location].location == player.location:
+        while self.monster.health > 0:
             print("You have the following options")
             print("                           +--------+")
             print("                           | ATTACK |")
             print("                           |  TALK  |")
             print("                           |  FLEE  |")
             print("                           +--------+")
-            playerinput = input("What will you do?")
+            playerinput = input("What will you do? ")
             if playerinput == "attack":
-                player.attack()
+                self.attack()
             elif playerinput == "talk":
                 player.talk()
             elif playerinput == "flee":
                 player.run()
                 player.location -=1
-        if monsters[player.location].health <= 0:
+                break
+        if self.monster.health <= 0:
             print("         !!!-----------------------------------!!!")
             print("          |              You win!               | ")
             print("          |      You get the following loot:    | ")
@@ -136,8 +141,9 @@ class Combat:
                 print("         !!!-----------------------------------!!!")
             else:
                 player.inventory.append(monsters[player.location].inventory)
-                print(f"You got {monsters[player.location].inventory}")
-            print("--------------------------------------")
+                for item in monsters[player.location].inventory:
+                    print(f"            |You got {monsters[player.location].inventory}|")
+                    print("--------------------------------------")
             if monsters[player.location].gold >= 0:
                 player.gold = player.gold + monsters[player.location].gold
                 print(f"You got {monsters[player.location].gold} gold")
@@ -161,7 +167,7 @@ class Shopkeeper:
         equipment_purchases = [0,0,0,0,0,0]
 
         # Equipment List
-        equipment_list = ["Longsword", "Steel Shield", "Longbow", "Spellbook", "100 ft of Rope", "Iron Rations"]
+        equipment_list = weapons
 
         # While we are still shopping...
         while (shopping == "y" and player.gold > 0):
@@ -183,7 +189,7 @@ class Shopkeeper:
             print("------------------------------------------------------------------------")
 
             # Inform the customer of the equipment purchase
-            print("Great! We'll have that " + equipment_list[choice_index] + " right out for you.")
+            print("Great! We'll have that " + equipment_list[choice_index].name + " right out for you.")
 
             # Provide exit option
             shopping = input("Would you like to make another purchase: (y)es or (n)o? ")
@@ -204,15 +210,64 @@ class Shopkeeper:
         # Loop through the full equipment list
         for equip_index in range(len(equipment_list)):
             equipment_count = str(equipment_purchases[equip_index])
-            equipment_name = str(equipment_list[equip_index])
+            equipment_name = equipment_list[equip_index].name
 
             # Gather the count of each pie in the pie list and print them alongside the pies
             print(equipment_count + " " + equipment_name)
 
         print("--------------------------------------------------------------------")
 
+class Introduction:
+    def __init__(self):
+        self.firsttime = True
+        self.playername = None
+        self.playergender = None
+        self.playerpronoun = None
+        self.playercourage = None
+        self.playerhealth = None
+        self.playerwealth = None
+        self.playermoney = None
+    def introinfo(self):
+        print("                     *--------------------------------*")
+        print("                     |  Tell me your name, traveler.  |")
+        print("                     *--------------------------------*")
+        self.playername = input()
+        print("                     *---------------------------------*")
+        print(f"                     |  Are you a man or a woman, {self.playername}? {(2-(len(self.playername)))*' '}|")
+        print("                     *---------------------------------*")
+        self.playergender = input()
+        if self.playergender == "man":
+            self.playerpronoun = "he"
+        elif self.playergender == "woman":
+            self.playerpronoun = "they"
+        else:
+            self.playerpronoun = "they"
+        print("                     *------------------------------------------*")
+        print(f"                     | Tell me {self.playername}, are a brave or cowardly {self.playergender}? {abs(6-(len(self.playergender)))*' '}|")
+        print("                     *------------------------------------------*")
+        self.playercourage =input()
+        if self.playercourage == "brave":
+            self.playerhealth = 3
+        elif self.playercourage == "cowardly":
+            self.playerhealth = 5
+        else:
+            self.playerhealth = 7
+        print("*-------------------------------------------------------------*")
+        print("|                  Do you love or hate money?                 |")
+        print("*-------------------------------------------------------------*")
+        self.playerwealth = input()
+        if self.playerwealth == "hate":
+            self.playermoney = 1
+        elif self.playerwealth == "love":
+            self.playermoney = 3
+        else:
+            self.playermoney = 5
+
+introduction = Introduction()
+introduction.introinfo()
+
 # Initializing Classes
-player = Player()
+player = Player(introduction.playerhealth, introduction.playername, introduction.playergender, introduction.playerpronoun, introduction.playermoney)
 
 # Creating weapons
 longsword = Equipment("Longsword",1,1)
@@ -254,9 +309,11 @@ while running == True:
     print("                   |back ---- Move backwards. |")
     print('                   |look ---- Look around.    |')
     print('                   |inv ---- Check inventory. |')
+    print('                   |equip ---- Equip weapon.  |')
+    print('                   |stats ---- Check stats.   |')
     print("                   *--------------------------*")
     print("                                             ")
-    playerinput = input("What would you like to do? ")
+    playerinput = input()
     if playerinput == "forward":
         player.forward()
     elif playerinput == "back":
@@ -272,6 +329,16 @@ while running == True:
         print("             #--------------------------------------------------#")
         player.check_inventory()
         print("             #--------------------------------------------------#")
+        print("                                   ")
+    elif playerinput == "equip":
+        print("                                   ")
+        print("             #--------------------------------------------------#")
+        player.equip()
+        print("             #--------------------------------------------------#")
+        print("                                   ")
+    elif playerinput == "stats":
+        print("                                   ")
+        player.check_stats()
         print("                                   ")
     else:
         print("Try another command")
