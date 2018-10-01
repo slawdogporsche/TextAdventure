@@ -8,25 +8,25 @@ class Equipment:
 class Player:
 
     def __init__(self,health, playername, playergender, playerpronoun, playergold):
-        self.health = 3
-        self.playername = "None"
-        self.playergender = "None"
-        self.playerpronoun = "None"
+        self.health = health
+        self.playername = playername
+        self.playergender = playergender
+        self.playerpronoun = playerpronoun
         self.inventory = []
-        self.gold = 3
+        self.gold = playergold
         self.location = 0
         self.equipment = None
 
     def equip(self):
         if len(self.inventory) > 0:
-            print("*----------------------------------------------*")
-            print("|Pick which of your weapons you'd like to equip|")
-            print("*----------------------------------------------*")
+            print("                *----------------------------------------------*")
+            print("                |                 Equipment                    |")
+            print("                *----------------------------------------------*")
             for x in range(len(self.inventory)):
-                print(f"{[x]} {player.inventory[x].name}")
-            equipmentvalue = int(input("Which would you like to equip? "))
-            if equipmentvalue == x:
-                self.equipment = self.inventory[x]
+                print(f"                |               {[x]} {player.inventory[x].name}            {(9-(len(player.inventory[x].name))) * ' '}      |")
+            print("                *----------------------------------------------*")
+            equipmentvalue = int(input("                                     "))
+            self.equipment = self.inventory[equipmentvalue]
         else:
             print("You don't have anything to equip")
     def forward(self):
@@ -41,9 +41,13 @@ class Player:
             self.location -= 1
             combat.combatflow(monsters[self.location])
         else:
-            print("                    o------------------o")
-            print("                    |You can't go back!|")
-            print("                    o------------------o")
+            print("                          o--------------------o")
+            print("                          | You can't go back! |")
+            print("                          o--------------------o")
+            print("                                               ")
+            print("                                               ")
+            print("                                               ")
+            print("                                               ")
     def run(self):
         if self.location != 0:
             print("You run away!")
@@ -58,16 +62,27 @@ class Player:
         if len(player.inventory) == 0:
             print("|You have nothing in your inventory|")
         else:
-            print("             |  You have the following items:                          |")
+            print("                  #------------------------------------#")
+            print("                  |    You have the following items:   |")
             for item in self.inventory:
-                print(f"             |               {item.name}                          {(10-len(item.name))* ' '}|")
+                print(f"                  |             {item.name}              {(9-len(item.name))* ' '}|")
+            print("                  #------------------------------------#")
     def check_stats(self):
-#        print("                        *---------------------*")
-        print(f"                        |      Name: {self.playername}          |")
-#        print(f"                        |      Health: {self.health}      |")
-#        print(f"                        |      Gold: {self.gold}          |")
-#        print(f"                        |    Equipped: {self.equipment}          |")
-#        print("                        *---------------------*")
+        if self.equipment == None:
+            print("                         *---------------------*")
+            print(f"                         |      Name: {self.playername} {(3-(len(self.playername))) * ' '}     |")
+            print(f"                         |      Health: {self.health}      |")
+            print(f"                         |       Gold: {self.gold}       |")
+            print(f"                         |   Equipped: {self.equipment}    |")
+            print("                         *---------------------*")
+        else:
+            print("                         *---------------------*")
+            print(f"                         |      Name: {self.playername} {(3-(len(self.playername))) * ' '}     |")
+            print(f"                         |      Health: {self.health}      |")
+            print(f"                         |       Gold: {self.gold}       |")
+            print(f"                         | Equipped: {self.equipment.name} |")
+            print("                         *---------------------*")
+
 
 class Monster:
 
@@ -104,7 +119,7 @@ class Combat:
         self.monster = monster
 
     def attack(self):
-        if player.equipment != 0:
+        if player.equipment != None:
             print(f"You attack the {self.monster} for {1+player.equipment.damage} damage!")
             self.monster.health -= 1 + player.equipment.damage
         else:
@@ -113,19 +128,18 @@ class Combat:
 
     def combatflow(self,monster):
         print("                                      ")
-        print(f"                     #----------------{(len(self.monster.name) - len(self.monster.adjective))*'-'}--#")
-        print(f"                     | A {self.monster.name} appears!|")
-        print(f"                     | He looks {self.monster.adjective}. {(len(self.monster.name) - len(self.monster.adjective))*' '}|")
-        print(f"                     #----------------{(len(self.monster.name) - len(self.monster.adjective))*'-'}--#")
+        print(f"                         #----------------{(len(self.monster.name) - len(self.monster.adjective))*'-'}--#")
+        print(f"                         | A {self.monster.name} appears!|")
+        print(f"                         | He looks {self.monster.adjective}. {(len(self.monster.name) - len(self.monster.adjective))*' '}|")
+        print(f"                         #----------------{(len(self.monster.name) - len(self.monster.adjective))*'-'}--#")
         print("                                      ")
         while self.monster.health > 0:
-            print("You have the following options")
-            print("                           +--------+")
-            print("                           | ATTACK |")
-            print("                           |  TALK  |")
-            print("                           |  FLEE  |")
-            print("                           +--------+")
-            playerinput = input("What will you do? ")
+            print("                              +--------+")
+            print("                              | ATTACK |")
+            print("                              |  TALK  |")
+            print("                              |  FLEE  |")
+            print("                              +--------+")
+            playerinput = input("                           What will you do? ")
             if playerinput == "attack":
                 self.attack()
             elif playerinput == "talk":
@@ -135,25 +149,30 @@ class Combat:
                 player.location -=1
                 break
         if self.monster.health <= 0:
-            print("         !!!-----------------------------------!!!")
-            print("          |              You win!               | ")
-            print("          |      You get the following loot:    | ")
-            print("         !!!-----------------------------------!!!")
+            print("              !!!-----------------------------------!!!")
+            print("               |              You win!               | ")
+            print("               |      You get the following loot:    | ")
+            print("              !!!-----------------------------------!!!")
             if (monsters[player.location].inventory) == None:
-                print("          |  The monster didn't have anything.  | ")
-                print("         !!!-----------------------------------!!!")
+                print("               |  The monster didn't have anything.  | ")
+                print("              !!!-----------------------------------!!!")
             else:
                 player.inventory.append(monsters[player.location].inventory)
                 for item in monsters[player.location].inventory:
-                    print(f"            |You got {monsters[player.location].inventory}|")
-                    print("--------------------------------------")
+                    print(f"                    |You got {monsters[player.location].inventory}|")
+                    print("     --------------------------------------")
             if monsters[player.location].gold >= 0:
                 player.gold = player.gold + monsters[player.location].gold
-                print(f"You got {monsters[player.location].gold} gold")
+                print(f"               |        You got {monsters[player.location].gold} gold              |")
+                print("              !!!-----------------------------------!!!")
             else:
-                print("You didn't get any gold")
-                print("-------------------------------------")
-
+                print("                 |       You didn't get any Gold         |       ")
+                print("             !!!-------------------------------------!!!")
+            rooms[player.location].monster = None
+            print("                                            ")
+            print("                                            ")
+            print("                                            ")
+            print("                                            ")
 class Shopkeeper:
     def __init__(self):
         self.location = 4
@@ -229,7 +248,7 @@ class Introduction:
         self.playercourage = None
         self.playerhealth = None
         self.playerwealth = None
-        self.playermoney = None
+        self.playergold = None
     def introinfo(self):
         print("                     *--------------------------------*")
         print("                     |  Tell me your name, traveler.  |")
@@ -255,23 +274,34 @@ class Introduction:
             self.playerhealth = 5
         else:
             self.playerhealth = 7
-        print("                     *------------------------------*")
-        print("                     |  Do you love or hate money?  |")
-        print("                     *------------------------------*")
+        print("                      *------------------------------*")
+        print("                      |  Do you love or hate money?  |")
+        print("                      *------------------------------*")
 
-        self.playerwealth = input("                                   ")
+        self.playerwealth = input("                                  ")
         if self.playerwealth == "hate":
-            self.playermoney = 1
+            self.playergold = 1
         elif self.playerwealth == "love":
-            self.playermoney = 3
+            self.playergold = 3
         else:
-            self.playermoney = 5
+            self.playergold = 5
 
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
+        print("                                                        ")
 introduction = Introduction()
 introduction.introinfo()
 
 # Initializing Classes
-player = Player(introduction.playerhealth, introduction.playername, introduction.playergender, introduction.playerpronoun, introduction.playermoney)
+player = Player(introduction.playerhealth, introduction.playername, introduction.playergender, introduction.playerpronoun, introduction.playergold)
 
 # Creating weapons
 longsword = Equipment("Longsword",1,1)
@@ -305,20 +335,6 @@ player.inventory.append(longsword)
 player.inventory.append(longbow)
 
 while running == True:
-    firsttime = 0
-    if firsttime == 0:
-        print("                                                        ")
-        print("                                                        ")
-        print("                                                        ")
-        print("                                                        ")
-        print("                                                        ")
-        print("                                                        ")
-        print("                                                        ")
-        print("                                                        ")
-        print("                 *--------------------------------------*")
-        print(f"                 |{rooms[player.location].description}|")
-        print("                 *--------------------------------------*")
-        firsttime += 1
     print("                                                 ")
     print("                       *--------------------------*")
     print("                       |What would you like to do?|")
@@ -331,31 +347,83 @@ while running == True:
     print('                       |stats ---- Check stats.   |')
     print("                       *--------------------------*")
     print("                                                 ")
-    playerinput = input("                                     ")
+    playerinput = input("                                  ")
     if playerinput == "forward":
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
         player.forward()
     elif playerinput == "back":
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
         player.back()
     elif playerinput == "look":
         print("                                   ")
-        print("                 *--------------------------------------*")
-        print(f"                 |{rooms[player.location].description}|")
-        print("                 *--------------------------------------*")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                 *-----------------------------------------*")
+        print(f"                 | {rooms[player.location].description} |")
+        print("                 *-----------------------------------------*")
         print("                                   ")
     elif playerinput == "inv":
         print("                                   ")
-        print("             #--------------------------------------------------#")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
         player.check_inventory()
-        print("             #--------------------------------------------------#")
         print("                                   ")
     elif playerinput == "equip":
         print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
         player.equip()
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
+        print("                                   ")
         print("                                   ")
     elif playerinput == "stats":
         print("                                   ")
+        print("                                   ")
+        print("                                   ")
         player.check_stats()
         print("                                   ")
+
     else:
         print("Try another command")
         print("-----------------------------------")
