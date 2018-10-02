@@ -50,12 +50,12 @@ class Player:
             print("                                               ")
     def run(self):
         if self.location != 0:
-            print("You run away!")
+            print("                             You run away!")
             self.location -= 1
         else:
             print("You can't go back!")
     def talk(self):
-            print("You have a great conversation")
+            print("                    You have a great conversation")
     def set0(self):
         self.location = 0
     def check_inventory(self):
@@ -120,7 +120,7 @@ class Combat:
 
     def attack(self):
         if player.equipment != None:
-            print(f"You attack the {self.monster} for {1+player.equipment.damage} damage!")
+            print(f"You attack the {self.monster.name} for {1+player.equipment.damage} damage!")
             self.monster.health -= 1 + player.equipment.damage
         else:
             print("You attack the monster for 1 damage")
@@ -139,7 +139,7 @@ class Combat:
             print("                              |  TALK  |")
             print("                              |  FLEE  |")
             print("                              +--------+")
-            playerinput = input("                           What will you do? ")
+            playerinput = input("                                 ")
             if playerinput == "attack":
                 self.attack()
             elif playerinput == "talk":
@@ -148,7 +148,10 @@ class Combat:
                 player.run()
                 player.location -=1
                 break
+            elif playerinput == "flee" and player.location == 0:
+                print("You can't go back!")
         if self.monster.health <= 0:
+            print("                                                       ")
             print("              !!!-----------------------------------!!!")
             print("               |              You win!               | ")
             print("               |      You get the following loot:    | ")
