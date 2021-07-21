@@ -214,7 +214,7 @@ class Shopkeeper:
             print("------------------------------------------------------------------------")
 
             # Inform the customer of the equipment purchase
-            print("Great! We'll have that " + equipment_list[choice_index].name + " right out for you.")
+            print("Here you go. Don't choke on it. " + equipment_list[choice_index].name + " right out for you.")
 
             # Provide exit option
             shopping = input("Would you like to make another purchase: (y)es or (n)o? ")
@@ -237,7 +237,7 @@ class Shopkeeper:
             equipment_count = str(equipment_purchases[equip_index])
             equipment_name = equipment_list[equip_index].name
 
-            # Gather the count of each pie in the pie list and print them alongside the pies
+            # Gather the count of each piece of equipment in the list and print them alongside
             print(equipment_count + " " + equipment_name)
 
         print("--------------------------------------------------------------------")
